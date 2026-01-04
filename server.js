@@ -351,17 +351,6 @@ app.use((req, res) => {
     res.status(404).render('404', { title: 'Página no Encontrada' });
 });
 
-app.listen(PORT, () => {
-    console.log(`
-╔════════════════════════════════════════════════════════╗
-║   🎬 CONVERSOR DE VIDEO PÚBLICO                       ║
-║   Versión: 1.0.0 (Monetizable)                       ║
-╠════════════════════════════════════════════════════════╣
-║   🌐 Servidor: http://localhost:${PORT}                   ║
-║   📁 Uploads: ${uploadsDir}         ║
-║   📁 Outputs: ${outputsDir}         ║
-║   ⚙️  Límite gratis: ${config.freeLimit} conversiones/día         ║
-║   📦 Tamaño máx: ${config.freeMaxSize}MB (gratis)                   ║
-╚════════════════════════════════════════════════════════╝
-    `);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor iniciado correctamente en el puerto ${PORT}`);
 });
