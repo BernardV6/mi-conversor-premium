@@ -1,0 +1,78 @@
+<main class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-center mb-8">Panel de Estadísticas</h1>
+
+        <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-2">Usuarios Totales</h3>
+                    <p id="totalUsers" class="text-3xl font-bold text-blue-600">Cargando...</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-green-800 mb-2">Conversiones Totales</h3>
+                    <p id="totalConversions" class="text-3xl font-bold text-green-600">Cargando...</p>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-sm">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-2">Trabajos Activos</h3>
+                    <p id="activeJobs" class="text-3xl font-bold text-yellow-600">Cargando...</p>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-lg shadow-sm md:col-span-2 lg:col-span-1">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-2">Promedio por Usuario</h3>
+                    <p id="averagePerUser" class="text-3xl font-bold text-purple-600">Cargando...</p>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold mb-4">Historial de Conversiones Recientes</h2>
+                <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <ul id="recentConversionsList" class="space-y-3">
+                        <li class="text-gray-600">Cargando historial...</li>
+                    </ul>
+                    <p id="noConversionsMessage" class="text-gray-500 hidden">No hay conversiones recientes para mostrar.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function fetchStats() {
+            try {
+                const response = await fetch('/stats'); // Changed from /api/stats to /stats
+                const data = await response.json();
+
+                document.getElementById('totalUsers').textContent = data.totalUsers;
+                document.getElementById('totalConversions').textContent = data.totalConversions;
+                document.getElementById('activeJobs').textContent = data.activeJobs;
+                document.getElementById('averagePerUser').textContent = data.averagePerUser;
+
+                // For recent conversions, you'd typically fetch another endpoint
+                // For now, let's simulate or leave a placeholder
+                const recentList = document.getElementById('recentConversionsList');
+                if (data.recentConversions && data.recentConversions.length > 0) {
+                    recentList.innerHTML = data.recentConversions.map(conv => `
+                        <li class="flex items-center justify-between p-3 bg-white rounded-md shadow-sm">
+                            <span class="font-medium">${conv.filename}</span>
+                            <span class="text-sm text-gray-500">${conv.status}</span>
+                            <span class="text-sm text-gray-500">${new Date(conv.timestamp).toLocaleString()}</span>
+                        </li>
+                    `).join('');
+                    document.getElementById('noConversionsMessage').classList.add('hidden');
+                } else {
+                    recentList.innerHTML = '';
+                    document.getElementById('noConversionsMessage').classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+                document.getElementById('totalUsers').textContent = 'Error';
+                document.getElementById('totalConversions').textContent = 'Error';
+                document.getElementById('activeJobs').textContent = 'Error';
+                document.getElementById('averagePerUser').textContent = 'Error';
+                document.getElementById('recentConversionsList').innerHTML = '<li class="text-red-600">No se pudieron cargar las estadísticas.</li>';
+            }
+        }
+
+        // Fetch stats on page load
+        document.addEventListener('DOMContentLoaded', fetchStats);
+        // Refresh stats every 30 seconds
+        setInterval(fetchStats, 30000);
+    </script>

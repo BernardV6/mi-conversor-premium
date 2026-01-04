@@ -1,0 +1,97 @@
+<div class="container mx-auto px-6 py-12">
+    <div class="text-center mb-8">
+        <h1 class="text-5xl font-extrabold leading-tight">Pásate a <span class="text-blue-600">Premium</span></h1>
+        <p class="text-xl text-gray-600 mb-8">Elimina los límites y desbloquea todo el potencial de nuestra herramienta.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center items-stretch">
+        <div class="w-full max-w-md mx-auto">
+            <div class="bg-white p-10 rounded-lg shadow-lg h-full flex flex-col">
+                <div class="p-6 rounded-t-lg bg-gray-100">
+                    <h4 class="text-2xl font-semibold">Gratis</h4>
+                </div>
+                <div class="p-6 flex-grow flex flex-col">
+                    <h1 class="text-4xl font-extrabold mt-3">$0<small class="text-xl text-gray-500">/mes</small></h1>
+                    <ul class="space-y-3 mt-4 mb-6 text-gray-700 flex-grow">
+                        <li>5 conversiones al día</li>
+                        <li>Máximo 10MB por archivo</li>
+                        <li>Formatos básicos</li>
+                        <li>Soporte por email</li>
+                    </ul>
+                    <button type="button" class="w-full py-3 px-4 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 transition duration-300 font-semibold" disabled>Plan Actual</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto">
+            <div class="bg-white p-10 rounded-lg shadow-lg h-full flex flex-col border-t-4 border-purple-600 transform scale-105">
+                <div class="p-6 rounded-t-lg bg-purple-600 text-white">
+                    <h4 class="text-2xl font-semibold">Pro Mensual</h4>
+                </div>
+                <div class="p-6 flex-grow flex flex-col">
+                    <h1 class="text-4xl font-extrabold mt-3">$9.99<small class="text-xl text-gray-500">/mes</small></h1>
+                    <ul class="space-y-3 mt-4 mb-6 text-gray-700 flex-grow">
+                        <li>Conversiones ilimitadas</li>
+                        <li>Máximo 2GB por archivo</li>
+                        <li>Todos los formatos</li>
+                        <li>Soporte prioritario</li>
+                    </ul>
+                    <button type="button" class="w-full py-3 px-4 rounded-md shadow-sm text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 checkout-button" data-price-id="price_MONTHLY_ID">Suscribirse Ahora</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    // Usamos la clave pública pasada desde el servidor
+    const stripe = Stripe('<%= stripePublicKey %>');
+
+    const checkoutButtons = document.querySelectorAll('.checkout-button');
+
+    checkoutButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const priceId = e.target.getAttribute('data-price-id');
+            
+            // Deshabilitar botón para evitar múltiples clics
+            button.disabled = true;
+            button.textContent = 'Procesando...';
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: priceId
+                    }),
+                });
+
+                const session = await response.json();
+
+                if (session.error) {
+                    alert('Error: ' + session.error);
+                    button.disabled = false;
+                    button.textContent = 'Suscribirse Ahora';
+                    return;
+                }
+
+                // Redirigir a Stripe Checkout
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error al conectar con el servidor de pagos.');
+                button.disabled = false;
+                button.textContent = 'Suscribirse Ahora';
+            }
+        });
+    });
+</script>
