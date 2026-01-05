@@ -207,9 +207,8 @@ app.get('/', (req, res) => {
 
 app.get('/premium', (req, res) => {
     res.render('premium', {
-        title: 'Premium',
-        stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
-        layout: false 
+        title: 'Pásate a Premium',
+        stripePublicKey: process.env.STRIPE_PUBLIC_KEY
     });
 });
 

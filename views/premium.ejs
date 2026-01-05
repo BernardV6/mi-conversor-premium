@@ -67,56 +67,80 @@
 </head>
 <body>
 
-    <div class="pricing-container">
-        <h1>Plan Pro Mensual</h1>
-        <div class="price">$9.99 <span>/ mes</span></div>
-        
-        <ul>
-            <li>Conversiones ilimitadas</li>
-            <li>Archivos de hasta 2GB</li>
-            <li>Sin anuncios</li>
-            <li>Soporte prioritario</li>
-        </ul>
+    <div class="gradient-bg py-20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+            
+            <div class="md:w-1/2 p-12 bg-gray-50">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Plan Pro Mensual</h2>
+                <p class="text-gray-600 mb-8">Lleva tus conversiones al siguiente nivel sin límites de tamaño ni esperas.</p>
+                
+                <ul class="space-y-4">
+                    <li class="flex items-center text-gray-700">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Conversiones ilimitadas
+                    </li>
+                    <li class="flex items-center text-gray-700">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Archivos de hasta 2GB
+                    </li>
+                    <li class="flex items-center text-gray-700">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Sin anuncios (AdFree)
+                    </li>
+                    <li class="flex items-center text-gray-700">
+                        <svg class="w-6 h-6 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Soporte prioritario 24/7
+                    </li>
+                </ul>
+            </div>
 
-        <button id="checkout-button">Suscribirse Ahora</button>
-        <div id="error-message" style="color: red; margin-top: 15px;"></div>
+            <div class="md:w-1/2 p-12 flex flex-col justify-center items-center text-center bg-white">
+                <div class="text-5xl font-extrabold text-gray-900 mb-2">$9.99</div>
+                <div class="text-gray-500 text-xl mb-8">por mes</div>
+                
+                <button id="checkout-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
+                    Suscribirse Ahora
+                </button>
+                
+                <p class="mt-6 text-xs text-gray-400">Pago seguro procesado por Stripe. Cancela cuando quieras.</p>
+                <div id="error-message" class="text-red-500 mt-4 text-sm font-semibold"></div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        const stripe = Stripe('<%= stripePublicKey %>');
-        const checkoutButton = document.getElementById('checkout-button');
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe('<%= stripePublicKey %>');
+    const checkoutButton = document.getElementById('checkout-button');
 
-        checkoutButton.addEventListener('click', async () => {
-            checkoutButton.disabled = true;
-            checkoutButton.innerText = 'Procesando...';
+    checkoutButton.addEventListener('click', async () => {
+        checkoutButton.disabled = true;
+        checkoutButton.innerText = 'Cargando pasarela...';
 
-            try {
-                const response = await fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+        try {
+            const response = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
-                const session = await response.json();
+            const session = await response.json();
 
-                if (session.error) {
-                    throw new Error(session.error);
-                }
+            if (session.error) throw new Error(session.error);
 
-                const result = await stripe.redirectToCheckout({
-                    sessionId: session.id
-                });
+            const result = await stripe.redirectToCheckout({ sessionId: session.id });
 
-                if (result.error) {
-                    alert(result.error.message);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('error-message').innerText = 'Error al conectar con Stripe. Inténtalo de nuevo.';
-            } finally {
-                checkoutButton.disabled = false;
-                checkoutButton.innerText = 'Suscribirse Ahora';
-            }
-        });
-    </script>
+            if (result.error) alert(result.error.message);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('error-message').innerText = 'Hubo un problema al conectar con el sistema de pagos.';
+        } finally {
+            checkoutButton.disabled = false;
+            checkoutButton.innerText = 'Suscribirse Ahora';
+        }
+    });
+</script>
 </body>
 </html>
