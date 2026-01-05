@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoConverter Pro - <%= title %></title>
+    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
     <link href="/css/style.css" rel="stylesheet"> 
+    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg {
             background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
@@ -16,36 +20,34 @@
             transition: width 0.5s ease-in-out;
         }
     </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
      crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-2xl font-bold text-gray-900">🎬 VideoConverter Pro</a>
             <div class="space-x-4">
                 <a href="/" class="text-gray-600 hover:text-blue-600">Inicio</a>
-                <a href="/conversor" class="text-gray-600 hover:text-blue-600">Conversor</a>
+                <a href="/" class="text-gray-600 hover:text-blue-600">Conversor</a>
                 <a href="/premium" class="text-gray-600 hover:text-blue-600">Premium</a>
                 <a href="/dashboard" class="text-gray-600 hover:text-blue-600">Estadísticas</a>
             </div>
         </nav>
     </header>
 
-    <!-- Main Content -->
-    <main>
+    <main class="min-h-screen">
         <%- body %>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8 mt-12">
         <div class="container mx-auto px-6 text-center">
             <p>&copy; <%= new Date().getFullYear() %> VideoConverter Pro. Todos los derechos reservados.</p>
             <div class="mt-4 space-x-4">
-                <a href="/privacidad" class="hover:text-blue-400">Política de Privacidad</a>
-                <a href="/terminos" class="hover:text-blue-400">Términos de Servicio</a>
+                <a href="/privacidad" class="hover:text-blue-400 text-sm">Política de Privacidad</a>
+                <a href="/terminos" class="hover:text-blue-400 text-sm">Términos de Servicio</a>
             </div>
         </div>
     </footer>
