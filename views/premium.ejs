@@ -18,7 +18,7 @@
                         <li>Formatos básicos</li>
                         <li>Soporte por email</li>
                     </ul>
-                    <button type="button" class="w-full py-3 px-4 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 transition duration-300 font-semibold" disabled>Plan Actual</button>
+                    <button type="button" class="w-full py-3 px-4 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50 transition duration-300 font-semibold" disabled>Actualmente Activo</button>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                         <li>Todos los formatos</li>
                         <li>Soporte prioritario</li>
                     </ul>
-                    <button type="button" class="w-full py-3 px-4 rounded-md shadow-sm text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 checkout-button" data-price-id="price_MONTHLY_ID">Suscribirse Ahora</button>
+                    <button type="button" class="w-full py-3 px-4 rounded-md shadow-sm text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 checkout-button" data-price-id="price_MONTHLY_ID">Actualizar Plan</button>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@
                 if (session.error) {
                     alert('Error: ' + session.error);
                     button.disabled = false;
-                    button.textContent = 'Suscribirse Ahora';
+                    button.textContent = 'Actualizar Plan';
                     return;
                 }
 
@@ -90,7 +90,7 @@
                 console.error('Error:', error);
                 alert('Hubo un error al conectar con el servidor de pagos.');
                 button.disabled = false;
-                button.textContent = 'Suscribirse Ahora';
+                button.textContent = 'Actualizar Plan';
             }
         });
     });
